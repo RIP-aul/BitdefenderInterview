@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "AvMock/1.0.0": {
+        "dependencies": {
+          "Bogus": "35.6.0"
+        },
+        "runtime": {
+          "AvMock.dll": {}
+        }
+      },
+      "Bogus/35.6.0": {
+        "runtime": {
+          "lib/net6.0/Bogus.dll": {
+            "assemblyVersion": "35.6.0.0",
+            "fileVersion": "35.6.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AvMock/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Bogus/35.6.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WiK99a8LedzzG7QbnJ1OZT02WZHjr8V6L+cmGJbuga7TtI+Whd+KFWNmVPtXKACFNjz2c/FIR6QDNJsHD6Eazg==",
+      "path": "bogus/35.6.0",
+      "hashPath": "bogus.35.6.0.nupkg.sha512"
+    }
+  }
+}

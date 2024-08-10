@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "iQt/JQtF9z8t5txv+MULBoaQYYpxsUeE2FxIq1vK2bRhtCPcJL/E6H2118VMtVhi0L+6Pi+ptPLC7ZzAp2Y2Wg==",
+  "success": true,
+  "projectFilePath": "C:\\test projects\\BitdefenderInterview\\AVMock\\AvMock.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\paulr\\.nuget\\packages\\bogus\\35.6.0\\bogus.35.6.0.nupkg.sha512"
+  ],
+  "logs": []
+}

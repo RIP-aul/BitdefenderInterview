@@ -1,0 +1,6 @@
+<h1>WebSocket Chat</h1>
+<div>
+    <textarea [value]="messages.join('\n')" rows="10" cols="50" readonly></textarea><br>
+    <input [(ngModel)]="messageInput" type="text" placeholder="Type a message">
+    <button (click)="sendMessage()">Send Message</button>
+</div>
