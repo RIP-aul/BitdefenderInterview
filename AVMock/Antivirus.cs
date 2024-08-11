@@ -48,9 +48,7 @@ namespace AvMock
 
 
         public AntivirusService(IAntivirus antivirus)
-        {
-            Antivirus = antivirus;
-        }
+            => Antivirus = antivirus;
 
         public void ActivateRealTimeScan()
         {
@@ -58,26 +56,15 @@ namespace AvMock
                 throw new RealTimeScanAlreadyEnabledException(
                     ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.RealTimeScanAlreadyEnabled]);
 
+            if (RealTimeScanStatus == RealTimeScanStatuses.Paused)
+            {
+                RealTimeScanStatus = RealTimeScanStatuses.Enabled;
+                _pauseEvent.Set();
+            }
+
             var cancellationToken = _realTimeScanningTaskCancellationTokenSource.Token;
 
             RealTimeScanningTask = Task.Run(() => RealTimeScan(cancellationToken), cancellationToken);
-        }
-
-        private async void RealTimeScan(CancellationToken cancellationToken)
-        {
-            RealTimeScanStatus = RealTimeScanStatuses.Enabled;
-
-            while (RealTimeScanStatus == RealTimeScanStatuses.Enabled)
-            {
-                // await 1 second to mock a real-time scan per file and emit event if threat detected
-                // threat probability 1.0%
-                const float threatProbability = 0.5f;
-
-                await Task.Delay(1000);
-                GenerateFile(threatProbability, out var isThreat, out var file);
-
-                DetectThreat(isThreat, file);
-            }
         }
 
         public void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option)
@@ -86,11 +73,54 @@ namespace AvMock
                 throw new RealTimeScanAlreadyDisabledException(
                     ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.RealTimeScanAlreadyDisabled]);
 
-            if (option == TemporaryRealTimeScanDisableOptions.None)
+            if (option != TemporaryRealTimeScanDisableOptions.None)
                 PauseRealTimeScan(option);
 
-            _realTimeScanningTaskCancellationTokenSource?.Cancel();
-            RealTimeScanStatus = RealTimeScanStatuses.Disabled;
+            else
+            {
+                _realTimeScanningTaskCancellationTokenSource?.Cancel();
+                RealTimeScanStatus = RealTimeScanStatuses.Disabled;
+            }
+        }
+
+        //private async void RealTimeScan(CancellationToken cancellationToken)
+        //{
+        //    RealTimeScanStatus = RealTimeScanStatuses.Enabled;
+
+        //    while (RealTimeScanStatus == RealTimeScanStatuses.Enabled)
+        //    {
+        //        // await 1 second to mock a real-time scan per file and emit event if a threat is detected
+        //        // threat probability 1.0%
+        //        const float threatProbability = 0.5f;
+
+        //        await Task.Delay(1000);
+        //        GenerateFile(threatProbability, out var isThreat, out var file);
+
+        //        DetectThreat(isThreat, file);
+        //    }
+        //}
+
+
+        private async void RealTimeScan(CancellationToken cancellationToken)
+        {
+            RealTimeScanStatus = RealTimeScanStatuses.Enabled;
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                // Check if the task should be paused
+                _pauseEvent.Wait(cancellationToken); // Waits until the event is set
+
+                if (RealTimeScanStatus == RealTimeScanStatuses.Enabled)
+                {
+                    // await 1 second to mock a real-time scan per file and emit event if a threat is detected
+                    // threat probability 1.0%
+                    const float threatProbability = 0.5f;
+
+                    await Task.Delay(1000);
+                    GenerateFile(threatProbability, out var isThreat, out var file);
+                    DetectThreat(isThreat, file);
+                }
+            }
         }
 
         private async void PauseRealTimeScan(TemporaryRealTimeScanDisableOptions option)
@@ -98,10 +128,12 @@ namespace AvMock
             var pauseTime = (int)option; // time in minutes
             RealTimeScanStatus = RealTimeScanStatuses.Paused;
 
+            // pause real-time scan for the specified amount of time
             _pauseEvent.Reset();
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
-            await Task.Delay(TimeSpan.FromMinutes(pauseTime));
-
+            // resume real-time scan
+            RealTimeScanStatus = RealTimeScanStatuses.Enabled;
             _pauseEvent.Set();
         }
 
@@ -149,16 +181,16 @@ namespace AvMock
         {
             OnDemandScanStatus = OnDemandScanStatuses.Scanning;
 
+            const int oneSecondDelay = 1000;
+
             // random number of seconds between 10 and 30 equal to the amount of time the scan will take
             // also number of files to be generated, one per second
             var scanTimeInSeconds = _faker.Random.Int(10, 30);
 
             for (var i = 0; i < scanTimeInSeconds; i++)
             {
-                await Task.Delay(1000);
-
+                await Task.Delay(oneSecondDelay);
                 GenerateFile(threatProbability, out var isThreat, out var file);
-
                 DetectThreat(isThreat, file);
             }
 
@@ -280,6 +312,7 @@ namespace AvMock
     {
         None = 0,
 
+        OneMinute = 1,
         FiveMinutes = 5,
         TenMinutes = 10,
         FifteenMinutes = 15,
