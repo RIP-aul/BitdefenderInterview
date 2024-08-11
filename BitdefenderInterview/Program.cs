@@ -1,6 +1,7 @@
 using AvMock;
 using AvMock.Interfaces;
 using BitdefenderInterview.Controllers.Commons;
+using Newtonsoft.Json;
 
 namespace BitdefenderInterview
 {
@@ -11,7 +12,12 @@ namespace BitdefenderInterview
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
+                options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 

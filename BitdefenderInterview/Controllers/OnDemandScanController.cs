@@ -38,14 +38,7 @@ namespace BitdefenderInterview.Controllers
         [HttpPost("stop")]
         public IActionResult StopOnDemandScan()
         {
-            try
-            {
-                AntivirusService.StopOnDemandScan(new CancellationToken(true));
-            }
-            catch (OnDemandScanNotRunningException exception)
-            {
-                return BadRequest(exception.Message);
-            }
+            AntivirusService.StopOnDemandScan(new CancellationToken(true));
 
             return Ok();
         }

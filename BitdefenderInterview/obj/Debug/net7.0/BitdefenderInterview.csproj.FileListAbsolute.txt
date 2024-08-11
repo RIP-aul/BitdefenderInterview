@@ -37,3 +37,7 @@ C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Micr
 C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\AVMock.dll
 C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\AVMock.pdb
 C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Bogus.dll
+C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\test projects\BitdefenderInterview\BitdefenderInterview\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

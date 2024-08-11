@@ -1,4 +1,5 @@
-﻿using AvMock.Exceptions;
+﻿using AvMock.Enums;
+using AvMock.Exceptions;
 using AvMock.Exceptions.ExceptionMessages;
 using AvMock.Interfaces;
 using Bogus;
@@ -20,7 +21,10 @@ namespace AvMock
     public class AntivirusService : IAntivirusService
     {
         public IAntivirus Antivirus { get; init; }
+
         public Task OnDemandScanningTask { get; set; } = Task.CompletedTask;
+        private CancellationTokenSource _onDemandScanningTaskCancellationTokenSource;
+
         public Task RealTimeScanningTask { get; set; } = Task.CompletedTask;
         private CancellationTokenSource _realTimeScanningTaskCancellationTokenSource { get; set; } = new CancellationTokenSource();
 
@@ -153,19 +157,20 @@ namespace AvMock
                 throw new OnDemandScanNotRunningException(
                     ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.OnDemandScanNotRunning]);
 
-            Task.FromCanceled(cancellationToken);
+            _onDemandScanningTaskCancellationTokenSource.Cancel();
             OnDemandScanStatus = OnDemandScanStatuses.StoppedByUser;
         }
 
+        #region Event Emitters
+
         protected virtual void OnOnDemandStatusChangeEvent(StatusEventArgs e)
-        {
-            AntivirusOnDemandStatusChangeEvent?.Invoke(this, e);
-        }
+            => AntivirusOnDemandStatusChangeEvent?.Invoke(this, e);
+
 
         protected virtual void OnThreatDetectedEvent(ThreatDetectedEventArgs e)
-        {
-            ThreatDetectedEvent?.Invoke(this, e);
-        }
+            => ThreatDetectedEvent?.Invoke(this, e);
+
+        #endregion
 
         #region Private Methods
 
@@ -248,90 +253,5 @@ namespace AvMock
 
         public bool IsThreat()
             => !ThreatNameEnum.HasFlag(SecurityThreatNames.None);
-    }
-
-    public class StatusEventArgs : EventArgs
-    {
-        public DateTime? TimeOfEvent { get; set; }
-        public OnDemandScanStatuses NewStatus { get; set; }
-        public OnDemandScanStatuses OldStatus { get; set; }
-
-        public StatusEventArgs(DateTime timeOfEvent)
-            => TimeOfEvent = timeOfEvent;
-
-        public StatusEventArgs(DateTime timeOfEvent, OnDemandScanStatuses newStatus, OnDemandScanStatuses oldStatus)
-        {
-            TimeOfEvent = timeOfEvent;
-            NewStatus = newStatus;
-            OldStatus = oldStatus;
-        }
-    }
-
-    public class ThreatDetectedEventArgs : EventArgs
-    {
-        public DateTime? TimeOfEvent { get; set; }
-        public AntivirusDetectionResult? AntivirusDetectionResult { get; set; }
-
-        public ThreatDetectedEventArgs(AntivirusDetectionResult antivirusDetectionResult)
-        {
-            TimeOfEvent = DateTime.Now;
-            AntivirusDetectionResult = antivirusDetectionResult;
-        }
-    }
-
-    [Flags]
-    public enum SecurityThreatNames
-    {
-        None = 0,
-
-        Virus = 1 << 0,
-        Worm = 1 << 1,
-        Trojan = 1 << 2,
-        Ransomware = 1 << 3,
-        Spyware = 1 << 4,
-
-        Adware = 1 << 5,
-        PotentiallyUnwantedPrograms = 1 << 6,
-
-        Phishing = 1 << 7,
-        ManInTheMiddle = 1 << 8,
-        DDoS = 1 << 9,
-
-        Rootkit = 1 << 10,
-        Keylogger = 1 << 11,
-        Backdoor = 1 << 12,
-
-        Malware = Virus | Worm | Trojan | Ransomware | Spyware,
-        NetworkThreats = Phishing | ManInTheMiddle | DDoS,
-        OtherThreats = Rootkit | Keylogger | Backdoor,
-
-        All = Malware | Adware | PotentiallyUnwantedPrograms | NetworkThreats | OtherThreats
-    }
-
-    public enum TemporaryRealTimeScanDisableOptions
-    {
-        None = 0,
-
-        OneMinute = 1,
-        FiveMinutes = 5,
-        TenMinutes = 10,
-        FifteenMinutes = 15,
-        ThirtyMinutes = 30,
-        SixtyMinutes = 60,
-    }
-
-    public enum OnDemandScanStatuses
-    {
-        StandingBy = 1,
-        StoppedByUser = 2,
-        ScanFinished = 3,
-        Scanning = 4,
-    }
-
-    public enum RealTimeScanStatuses
-    {
-        Disabled = 0,
-        Enabled = 1,
-        Paused = 2
     }
 }
