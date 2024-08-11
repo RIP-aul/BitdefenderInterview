@@ -7,19 +7,10 @@ namespace BitdefenderInterview.Controllers
 {
     [ApiController]
     [Route("on-demand-scan")]
-    public class OnDemandScanController : ControllerBase
+    public class OnDemandScanController : BaseController
     {
-        private IAntivirusService _antivirusService { get; init; }
-        private IAntivirusEventHandler _eventHandler { get; set; }
-
-        public OnDemandScanController(IAntivirusService antivirusService, IAntivirusEventHandler eventHandler)
-        {
-            _antivirusService = antivirusService;
-            _eventHandler = eventHandler;
-
-            _antivirusService.AntivirusOnDemandStatusChangeEvent += _eventHandler.OnStatusChangedEvent;
-            _antivirusService.ThreatDetectedEvent += _eventHandler.OnThreatDetectedEvent;
-        }
+        public OnDemandScanController(IAntivirusEventHandler antivirusEventHandler, IAntivirusService antivirusService)
+            : base(antivirusEventHandler, antivirusService) { }
 
         /// <summary>
         /// Start the antivirus on-demand scan.
@@ -30,7 +21,7 @@ namespace BitdefenderInterview.Controllers
         {
             try
             {
-                _antivirusService.StartOnDemandScan();
+                AntivirusService.StartOnDemandScan();
             }
             catch (OnDemandScanAlreadyRunningException exception)
             {
@@ -49,7 +40,7 @@ namespace BitdefenderInterview.Controllers
         {
             try
             {
-                _antivirusService.StopOnDemandScan(new CancellationToken(true));
+                AntivirusService.StopOnDemandScan(new CancellationToken(true));
             }
             catch (OnDemandScanNotRunningException exception)
             {

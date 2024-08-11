@@ -12,12 +12,12 @@ namespace BitdefenderInterview.Controllers.Commons
     {
         public void OnStatusChangedEvent(object sender, StatusEventArgs args)
         {
-            Console.WriteLine("PLM");
+            Console.WriteLine("");
         }
 
         public void OnThreatDetectedEvent(object sender, ThreatDetectedEventArgs args)
         {
-            Console.WriteLine("PLT");
+            Console.WriteLine("");
         }
     }
 }

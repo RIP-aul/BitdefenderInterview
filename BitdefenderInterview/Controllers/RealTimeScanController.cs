@@ -8,19 +8,10 @@ namespace BitdefenderInterview.Controllers
 {
     [ApiController]
     [Route("real-time-scan")]
-    public class RealTimeScanController : ControllerBase
+    public class RealTimeScanController : BaseController
     {
-        private IAntivirusService _antivirusService { get; init; }
-        private IAntivirusEventHandler _eventHandler { get; set; }
-
-        public RealTimeScanController(IAntivirusService antivirusService, IAntivirusEventHandler eventHandler)
-        {
-            _antivirusService = antivirusService;
-            _eventHandler = eventHandler;
-
-            _antivirusService.AntivirusOnDemandStatusChangeEvent += _eventHandler.OnStatusChangedEvent;
-            _antivirusService.ThreatDetectedEvent += _eventHandler.OnThreatDetectedEvent;
-        }
+        public RealTimeScanController(IAntivirusEventHandler antivirusEventHandler, IAntivirusService antivirusService)
+            : base(antivirusEventHandler, antivirusService) { }
 
         /// <summary>
         /// Activates the real-time scan antivirus scan.
@@ -31,7 +22,7 @@ namespace BitdefenderInterview.Controllers
         {
             try
             {
-                _antivirusService.ActivateRealTimeScan();
+                AntivirusService.ActivateRealTimeScan();
             }
             catch (RealTimeScanAlreadyEnabledException exception)
             {
@@ -51,7 +42,7 @@ namespace BitdefenderInterview.Controllers
         {
             try
             {
-                _antivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
+                AntivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
             }
             catch (RealTimeScanAlreadyDisabledException exception)
             {

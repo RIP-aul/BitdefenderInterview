@@ -114,7 +114,7 @@ namespace AvMock
                 {
                     // await 1 second to mock a real-time scan per file and emit event if a threat is detected
                     // threat probability 1.0%
-                    const float threatProbability = 0.5f;
+                    const float threatProbability = 0.1f;
 
                     await Task.Delay(1000);
                     GenerateFile(threatProbability, out var isThreat, out var file);
@@ -130,7 +130,7 @@ namespace AvMock
 
             // pause real-time scan for the specified amount of time
             _pauseEvent.Reset();
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Task.Delay(TimeSpan.FromMinutes(pauseTime));
 
             // resume real-time scan
             RealTimeScanStatus = RealTimeScanStatuses.Enabled;
