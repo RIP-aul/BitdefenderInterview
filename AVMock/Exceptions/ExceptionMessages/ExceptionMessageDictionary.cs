@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AvMock.Exceptions.ExceptionMessages
+﻿namespace AvMock.Exceptions.ExceptionMessages
 {
     public static class ExceptionMessageDictionary
     {
@@ -12,6 +6,8 @@ namespace AvMock.Exceptions.ExceptionMessages
         {
             { ErrorCodes.OnDemandScanAlreadyRunning, ExceptionMessages.OnDemandScanAlreadyRunning },
             { ErrorCodes.OnDemandScanNotRunning, ExceptionMessages.OnDemandScanNotRunning },
+            { ErrorCodes.RealTimeScanAlreadyEnabled, ExceptionMessages.RealTimeScanAlreadyEnabled },
+            { ErrorCodes.RealTimeScanAlreadyDisabled, ExceptionMessages.RealTimeScanAlreadyDisabled },
         };
     }
 }

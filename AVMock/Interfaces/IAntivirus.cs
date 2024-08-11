@@ -1,4 +1,4 @@
-﻿namespace AvMock
+﻿namespace AvMock.Interfaces
 {
     public interface IAntivirus
     {
@@ -6,7 +6,6 @@
         RealTimeScanStatuses RealTimeScanStatus { get; }
 
         void SetOnDemandScanStatus(OnDemandScanStatuses status);
-
         void SetRealTimeScanStatus(RealTimeScanStatuses status);
     }
 }

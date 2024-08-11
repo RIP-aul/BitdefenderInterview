@@ -5,7 +5,6 @@ using System.Text;
 namespace BitdefenderInterview.Controllers
 {
     [ApiController]
-    [Route("api")]
     public class WebSocketController : ControllerBase
     {
         [HttpGet("connect")]
@@ -33,7 +32,6 @@ namespace BitdefenderInterview.Controllers
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
                 Console.WriteLine($"Received: {message}");
 
-                // Process the message and send a response if needed
                 var responseMessage = $"Server received: {message}";
                 var responseBuffer = Encoding.UTF8.GetBytes(responseMessage);
                 await webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), result.MessageType, result.EndOfMessage, CancellationToken.None);

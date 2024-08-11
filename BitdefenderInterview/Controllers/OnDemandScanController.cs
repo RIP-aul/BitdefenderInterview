@@ -1,5 +1,6 @@
-﻿using AvMock;
-using AvMock.Exceptions;
+﻿using AvMock.Exceptions;
+using AvMock.Interfaces;
+using BitdefenderInterview.Controllers.Commons;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BitdefenderInterview.Controllers
@@ -9,12 +10,15 @@ namespace BitdefenderInterview.Controllers
     public class OnDemandScanController : ControllerBase
     {
         private IAntivirusService _antivirusService { get; init; }
-        private IEventHandlerClass _eventHandlerClass { get; set; }
+        private IAntivirusEventHandler _eventHandler { get; set; }
 
-        public OnDemandScanController(IAntivirusService antivirusService, IEventHandlerClass eventHandlerClass)
+        public OnDemandScanController(IAntivirusService antivirusService, IAntivirusEventHandler eventHandler)
         {
             _antivirusService = antivirusService;
-            _eventHandlerClass = eventHandlerClass;
+            _eventHandler = eventHandler;
+
+            _antivirusService.AntivirusOnDemandStatusChangeEvent += _eventHandler.OnStatusChangedEvent;
+            _antivirusService.ThreatDetectedEvent += _eventHandler.OnThreatDetectedEvent;
         }
 
         /// <summary>

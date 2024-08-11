@@ -1,4 +1,7 @@
 using AvMock;
+using AvMock.Exceptions;
+using AvMock.Interfaces;
+using BitdefenderInterview.Controllers.Commons;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BitdefenderInterview.Controllers
@@ -8,12 +11,15 @@ namespace BitdefenderInterview.Controllers
     public class RealTimeScanController : ControllerBase
     {
         private IAntivirusService _antivirusService { get; init; }
-        private IEventHandlerClass _eventHandlerClass { get; set; }
-        
-        public RealTimeScanController(IAntivirusService antivirusService, IEventHandlerClass eventHandlerClass)
+        private IAntivirusEventHandler _eventHandler { get; set; }
+
+        public RealTimeScanController(IAntivirusService antivirusService, IAntivirusEventHandler eventHandler)
         {
             _antivirusService = antivirusService;
-            _eventHandlerClass = eventHandlerClass;
+            _eventHandler = eventHandler;
+
+            _antivirusService.AntivirusOnDemandStatusChangeEvent += _eventHandler.OnStatusChangedEvent;
+            _antivirusService.ThreatDetectedEvent += _eventHandler.OnThreatDetectedEvent;
         }
 
         /// <summary>
@@ -21,11 +27,17 @@ namespace BitdefenderInterview.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost("activate")]
-        public async Task<IActionResult> ActivateRealTimeScan()
+        public IActionResult ActivateRealTimeScan()
         {
+            try
+            {
+                _antivirusService.ActivateRealTimeScan();
+            }
+            catch (RealTimeScanAlreadyEnabledException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
-
-            await Task.FromResult(0);
             return Ok();
         }
 
@@ -33,11 +45,19 @@ namespace BitdefenderInterview.Controllers
         /// Deactivates the real-time scan antivirus scan.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("deactivate")]
-        public async Task<IActionResult> DeactivateRealTimeScan()
+        [HttpPost]
+        [Route("deactivate/{realTimeScanDisableOptions}")]
+        public IActionResult DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions realTimeScanDisableOptions)
         {
-            _antivirusService.StopOnDemandScan(new CancellationToken(true));
-            await Task.FromResult(0);
+            try
+            {
+                _antivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
+            }
+            catch (RealTimeScanAlreadyDisabledException exception)
+            {
+                return BadRequest(exception.Message);
+            }
+
             return Ok();
         }
     }

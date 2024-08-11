@@ -1,5 +1,6 @@
 ﻿using AvMock.Exceptions;
 using AvMock.Exceptions.ExceptionMessages;
+using AvMock.Interfaces;
 using Bogus;
 
 namespace AvMock
@@ -19,22 +20,89 @@ namespace AvMock
     public class AntivirusService : IAntivirusService
     {
         public IAntivirus Antivirus { get; init; }
-        public Task<IEnumerable<AntivirusDetectionResult>> ScanningTask { get; set; } = Task.FromResult(Enumerable.Empty<AntivirusDetectionResult>());
+        public Task OnDemandScanningTask { get; set; } = Task.CompletedTask;
+        public Task RealTimeScanningTask { get; set; } = Task.CompletedTask;
+        private CancellationTokenSource _realTimeScanningTaskCancellationTokenSource { get; set; } = new CancellationTokenSource();
 
         public OnDemandScanStatuses OnDemandScanStatus
         {
             get => Antivirus.OnDemandScanStatus;
-            set => Antivirus.SetOnDemandScanStatus(value);
+            set => ChangeOnDemandStatus(value);
         }
 
-        public delegate void AntivirusStatusChangeHandler(object source, StatusEventArgs args);
-        public event AntivirusStatusChangeHandler? AntivirusStatusChangeEvent;
+        public RealTimeScanStatuses RealTimeScanStatus
+        {
+            get => Antivirus.RealTimeScanStatus;
+            set => Antivirus.SetRealTimeScanStatus(value);
+        }
+
+        public delegate void AntivirusOnDemandStatusChangeHandler(object source, StatusEventArgs args);
+        public event AntivirusOnDemandStatusChangeHandler? AntivirusOnDemandStatusChangeEvent;
+
+        public delegate void ThreatDetectedHandler(object source, ThreatDetectedEventArgs args);
+        public event ThreatDetectedHandler? ThreatDetectedEvent;
 
         private Faker _faker { get; } = new("en_US");
+
+        private ManualResetEventSlim _pauseEvent = new(true);
+
 
         public AntivirusService(IAntivirus antivirus)
         {
             Antivirus = antivirus;
+        }
+
+        public void ActivateRealTimeScan()
+        {
+            if (RealTimeScanStatus == RealTimeScanStatuses.Enabled)
+                throw new RealTimeScanAlreadyEnabledException(
+                    ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.RealTimeScanAlreadyEnabled]);
+
+            var cancellationToken = _realTimeScanningTaskCancellationTokenSource.Token;
+
+            RealTimeScanningTask = Task.Run(() => RealTimeScan(cancellationToken), cancellationToken);
+        }
+
+        private async void RealTimeScan(CancellationToken cancellationToken)
+        {
+            RealTimeScanStatus = RealTimeScanStatuses.Enabled;
+
+            while (RealTimeScanStatus == RealTimeScanStatuses.Enabled)
+            {
+                // await 1 second to mock a real-time scan per file and emit event if threat detected
+                // threat probability 1.0%
+                const float threatProbability = 0.5f;
+
+                await Task.Delay(1000);
+                GenerateFile(threatProbability, out var isThreat, out var file);
+
+                DetectThreat(isThreat, file);
+            }
+        }
+
+        public void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option)
+        {
+            if (RealTimeScanStatus != RealTimeScanStatuses.Enabled)
+                throw new RealTimeScanAlreadyDisabledException(
+                    ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.RealTimeScanAlreadyDisabled]);
+
+            if (option == TemporaryRealTimeScanDisableOptions.None)
+                PauseRealTimeScan(option);
+
+            _realTimeScanningTaskCancellationTokenSource?.Cancel();
+            RealTimeScanStatus = RealTimeScanStatuses.Disabled;
+        }
+
+        private async void PauseRealTimeScan(TemporaryRealTimeScanDisableOptions option)
+        {
+            var pauseTime = (int)option; // time in minutes
+            RealTimeScanStatus = RealTimeScanStatuses.Paused;
+
+            _pauseEvent.Reset();
+
+            await Task.Delay(TimeSpan.FromMinutes(pauseTime));
+
+            _pauseEvent.Set();
         }
 
         public void StartOnDemandScan()
@@ -43,7 +111,7 @@ namespace AvMock
                 throw new OnDemandScanAlreadyRunningException(
                     ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.OnDemandScanAlreadyRunning]);
 
-            var thread = new Thread(new ThreadStart(ScanSystem));
+            var thread = new Thread(new ThreadStart(ScanSystemOnDemand));
             thread.Start();
         }
 
@@ -57,35 +125,29 @@ namespace AvMock
             OnDemandScanStatus = OnDemandScanStatuses.StoppedByUser;
         }
 
-        protected virtual void OnStatusChangeEvent(StatusEventArgs e)
+        protected virtual void OnOnDemandStatusChangeEvent(StatusEventArgs e)
         {
-            AntivirusStatusChangeEvent?.Invoke(this, e);
+            AntivirusOnDemandStatusChangeEvent?.Invoke(this, e);
+        }
+
+        protected virtual void OnThreatDetectedEvent(ThreatDetectedEventArgs e)
+        {
+            ThreatDetectedEvent?.Invoke(this, e);
         }
 
         #region Private Methods
 
-        private async void ScanSystem()
+        private void ScanSystemOnDemand()
+            => OnDemandScanningTask = GenerateFiles();
+
+        // probability weight of 0.01f means 1.0%
+        // probability weight of 0.9f means 90.0%
+        // probability weight of 1.0f or higher means 100.0%
+
+        // default is set to 5.0% probability of a file being a threat
+        private async Task GenerateFiles(float threatProbability = 0.05f)
         {
             OnDemandScanStatus = OnDemandScanStatuses.Scanning;
-            ScanningTask = MockScan();
-
-            var result = await ScanningTask;
-            OnDemandScanStatus = OnDemandScanStatuses.ScanFinished;
-        }
-
-        private async Task<IEnumerable<AntivirusDetectionResult>> MockScan()
-            => (await GenerateFiles()).Where(t => t.IsThreat());
-
-        private async Task<IEnumerable<AntivirusDetectionResult>> GenerateFiles()
-        {
-            var files = new List<AntivirusDetectionResult>();
-
-            // probability weight of 0.01f means 1.0%
-            // probability weight of 0.9f means 90.0%
-            // probability weight of 1.0f or higher means 100.0%
-
-            // 5.0% probability of a file being a threat
-            const float threatProbability = 0.05f;
 
             // random number of seconds between 10 and 30 equal to the amount of time the scan will take
             // also number of files to be generated, one per second
@@ -95,18 +157,36 @@ namespace AvMock
             {
                 await Task.Delay(1000);
 
-                var path = string.Concat(_faker.Random.Enum<Drives>(), ';', _faker.System.FilePath());
+                GenerateFile(threatProbability, out var isThreat, out var file);
 
-                var file = new AntivirusDetectionResult(
-                    path,
-                    IsThreat(threatProbability)
-                        ? _faker.Random.Enum(SecurityThreatNames.None, SecurityThreatNames.All) // remove None and All security threats
-                        : SecurityThreatNames.None);
-
-                files.Add(file);
+                DetectThreat(isThreat, file);
             }
 
-            return files;
+            OnDemandScanStatus = OnDemandScanStatuses.ScanFinished;
+        }
+
+        private void DetectThreat(bool isThreat, AntivirusDetectionResult file)
+        {
+            if (isThreat)
+                OnThreatDetectedEvent(new ThreatDetectedEventArgs(file));
+        }
+
+        private void GenerateFile(float threatProbability, out bool isThreat, out AntivirusDetectionResult file)
+        {
+            var path = string.Concat(_faker.Random.Enum<Drives>(), ':', _faker.System.FilePath());
+
+            isThreat = IsThreat(threatProbability);
+            file = new AntivirusDetectionResult(
+                path,
+                isThreat
+                    ? _faker.Random.Enum(SecurityThreatNames.None, SecurityThreatNames.All) // remove None and All security threats
+                    : SecurityThreatNames.None);
+        }
+
+        private void ChangeOnDemandStatus(OnDemandScanStatuses newStatus)
+        {
+            OnOnDemandStatusChangeEvent(new StatusEventArgs(DateTime.Now, newStatus, OnDemandScanStatus));
+            Antivirus.SetOnDemandScanStatus(newStatus);
         }
 
         private bool IsThreat(float threatProbability)
@@ -155,27 +235,17 @@ namespace AvMock
         }
     }
 
-    public class EventHandlerClass : IEventHandlerClass
+    public class ThreatDetectedEventArgs : EventArgs
     {
-        private IAntivirusService _antivirusService { get; set; }
+        public DateTime? TimeOfEvent { get; set; }
+        public AntivirusDetectionResult? AntivirusDetectionResult { get; set; }
 
-        public EventHandlerClass(IAntivirusService antivirusService)
+        public ThreatDetectedEventArgs(AntivirusDetectionResult antivirusDetectionResult)
         {
-            _antivirusService = antivirusService;
-            _antivirusService.AntivirusStatusChangeEvent += OnStatusChangedEvent;
-        }
-
-        public void OnStatusChangedEvent(object sender, StatusEventArgs args)
-        {
-            Console.WriteLine("PLM");
+            TimeOfEvent = DateTime.Now;
+            AntivirusDetectionResult = antivirusDetectionResult;
         }
     }
-
-    public interface IEventHandlerClass
-    {
-        void OnStatusChangedEvent(object sender, StatusEventArgs args);
-    }
-
 
     [Flags]
     public enum SecurityThreatNames
@@ -206,12 +276,23 @@ namespace AvMock
         All = Malware | Adware | PotentiallyUnwantedPrograms | NetworkThreats | OtherThreats
     }
 
+    public enum TemporaryRealTimeScanDisableOptions
+    {
+        None = 0,
+
+        FiveMinutes = 5,
+        TenMinutes = 10,
+        FifteenMinutes = 15,
+        ThirtyMinutes = 30,
+        SixtyMinutes = 60,
+    }
+
     public enum OnDemandScanStatuses
     {
         StandingBy = 1,
         StoppedByUser = 2,
-        ScanFinished = 4,
-        Scanning = 6,
+        ScanFinished = 3,
+        Scanning = 4,
     }
 
     public enum RealTimeScanStatuses
