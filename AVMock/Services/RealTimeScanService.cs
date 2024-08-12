@@ -63,10 +63,12 @@ namespace AvMock.Services
                 ScanStatus = RealTimeScanStatuses.Enabled;
                 _pauseEvent.Set();
             }
-
-            var cancellationToken = _scanningTaskCancellationTokenSource.Token;
-
-            ScanningTask = Task.Run(() => RealTimeScan(cancellationToken), cancellationToken);
+            else
+            {
+                _scanningTaskCancellationTokenSource = new CancellationTokenSource();
+                var cancellationToken = _scanningTaskCancellationTokenSource.Token;
+                ScanningTask = Task.Run(() => RealTimeScan(cancellationToken), cancellationToken);
+            }
         }
 
         public void DeactivateScan(TemporaryRealTimeScanDisableOptions option)
