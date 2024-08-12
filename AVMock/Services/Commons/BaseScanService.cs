@@ -10,7 +10,7 @@ namespace AvMock.Services.Commons
         public event ThreatsDetectedHandler? ThreatsDetectedEvent;
 
         public delegate void StatusChangedHandler(object source, StatusEventArgsBase args);
-        public event StatusChangedHandler StatusChangedEvent;
+        public event StatusChangedHandler? StatusChangedEvent;
 
         public BaseScanService(IAntivirus antivirus)
             => Antivirus = antivirus;

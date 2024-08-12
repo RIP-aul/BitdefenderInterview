@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitdefenderInterview", "BitdefenderInterview\BitdefenderInterview.csproj", "{17505939-9623-455D-A3E8-5517CDE654D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitdefenderInterview", "BitdefenderInterview\BitdefenderInterview.csproj", "{17505939-9623-455D-A3E8-5517CDE654D4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{4280CACE-FF42-41C4-89F7-6501F722EEB7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{6ECB1D92-1F8A-4EAC-AB6D-D52229495660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvMock", "AVMock\AvMock.csproj", "{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AvMock", "AVMock\AvMock.csproj", "{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AntivirusSDK", "AntivirusSDK", "{0689CFC9-F882-4330-95FF-3BBC03290710}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntivirusSDK", "AntivirusSDK\AntivirusSDK.csproj", "{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,10 @@ Global
 		{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{17505939-9623-455D-A3E8-5517CDE654D4} = {4280CACE-FF42-41C4-89F7-6501F722EEB7}
 		{7206B6B7-0CDE-4A45-83C9-7EAA3DC58AC1} = {6ECB1D92-1F8A-4EAC-AB6D-D52229495660}
+		{65CF2DAF-F988-46FE-9E1E-0A7690F9D96A} = {0689CFC9-F882-4330-95FF-3BBC03290710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {54BC33C8-752D-4CBC-8ED7-9B31809C9DAD}

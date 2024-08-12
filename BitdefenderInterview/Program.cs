@@ -1,7 +1,8 @@
 using AvMock;
 using AvMock.Interfaces;
 using AvMock.Services;
-using BitdefenderInterview.Controllers.Commons;
+using BitdefenderInterview.Commons;
+using BitdefenderInterview.Commons.Interfaces;
 using Newtonsoft.Json;
 
 namespace BitdefenderInterview

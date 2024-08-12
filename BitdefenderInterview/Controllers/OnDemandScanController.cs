@@ -1,5 +1,6 @@
 ﻿using AvMock.Exceptions;
 using AvMock.Interfaces;
+using BitdefenderInterview.Commons.Interfaces;
 using BitdefenderInterview.Controllers.Commons;
 using Microsoft.AspNetCore.Mvc;
 
