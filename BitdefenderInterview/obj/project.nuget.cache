@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "DF2epQOMiLnZrMz8OyDsbbkKhkT82pIKjlz+rjQaL8KZPJopObBR57uGKYDQPP4X6cw1dThz+gcozMlxwmAsdw==",
+  "dgSpecHash": "m3/ANkos+yB31+geNUmfTZmZbbB9LmE5Q7510uRTxBXRtIPPNTWTv5lLFQJbFy/dL01Xgw50uvv4Q/YhZD06Sw==",
   "success": true,
   "projectFilePath": "C:\\test projects\\BitdefenderInterview\\BitdefenderInterview\\BitdefenderInterview.csproj",
   "expectedPackageFiles": [
@@ -16,6 +16,7 @@
     "C:\\Users\\paulr\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
     "C:\\Users\\paulr\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\paulr\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
+    "C:\\Users\\paulr\\.nuget\\packages\\oneof\\3.0.271\\oneof.3.0.271.nupkg.sha512",
     "C:\\Users\\paulr\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\paulr\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\paulr\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",

@@ -180,6 +180,15 @@
           }
         }
       },
+      "OneOf/3.0.271": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        }
+      },
       "Swashbuckle.AspNetCore/6.4.0": {
         "type": "package",
         "dependencies": {
@@ -247,7 +256,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
         "dependencies": {
-          "Bogus": "35.6.0"
+          "Bogus": "35.6.0",
+          "OneOf": "3.0.271"
         },
         "compile": {
           "bin/placeholder/AvMock.dll": {}
@@ -752,6 +762,21 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
+    "OneOf/3.0.271": {
+      "sha512": "pqpqeK8xQGggExhr4tesVgJkjdn+9HQAO0QgrYV2hFjE3y90okzk1kQMntMiUOGfV7FrCUfKPaVvPBD4IANqKg==",
+      "type": "package",
+      "path": "oneof/3.0.271",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/OneOf.dll",
+        "lib/net45/OneOf.dll",
+        "lib/netstandard1.3/OneOf.dll",
+        "lib/netstandard2.0/OneOf.dll",
+        "oneof.3.0.271.nupkg.sha512",
+        "oneof.nuspec"
+      ]
+    },
     "Swashbuckle.AspNetCore/6.4.0": {
       "sha512": "eUBr4TW0up6oKDA5Xwkul289uqSMgY0xGN4pnbOIBqCcN9VKGGaPvHX3vWaG/hvocfGDP+MGzMA0bBBKz2fkmQ==",
       "type": "package",
@@ -845,6 +870,7 @@
       "MediatR >= 12.4.0",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 7.0.20",
       "Microsoft.AspNetCore.OpenApi >= 7.0.2",
+      "OneOf >= 3.0.271",
       "Swashbuckle.AspNetCore >= 6.4.0"
     ]
   },
@@ -906,6 +932,10 @@
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[7.0.2, )"
+          },
+          "OneOf": {
+            "target": "Package",
+            "version": "[3.0.271, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",

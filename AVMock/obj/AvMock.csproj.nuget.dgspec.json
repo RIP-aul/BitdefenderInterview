@@ -46,6 +46,10 @@
             "Bogus": {
               "target": "Package",
               "version": "[35.6.0, )"
+            },
+            "OneOf": {
+              "target": "Package",
+              "version": "[3.0.271, )"
             }
           },
           "imports": [

@@ -13,21 +13,14 @@ namespace BitdefenderInterview.Controllers.Commons
             AntivirusEventHandler = antivirusEventHandler;
             AntivirusService = antivirusService;
 
-            AntivirusService.AntivirusOnDemandStatusChangeEvent += AntivirusEventHandler.OnStatusChangedEvent;
-            AntivirusService.ThreatDetectedEvent += AntivirusEventHandler.OnThreatDetectedEvent;
-        }
-
-        [HttpGet("scan-events")]
-        public IActionResult GetScanEvents()
-        {
-            // Shared logic for this endpoint
-            return Ok(AntivirusEventHandler.Events);
+            AntivirusService.ThreatsDetectedEvent += AntivirusEventHandler.OnThreatsDetectedEvent;
+            AntivirusService.StatusChangedEvent += AntivirusEventHandler.OnStatusChangedEvent;
         }
 
         ~BaseController()
         {
-            AntivirusService.AntivirusOnDemandStatusChangeEvent -= AntivirusEventHandler.OnStatusChangedEvent;
-            AntivirusService.ThreatDetectedEvent -= AntivirusEventHandler.OnThreatDetectedEvent;
+            AntivirusService.ThreatsDetectedEvent -= AntivirusEventHandler.OnThreatsDetectedEvent;
+            AntivirusService.StatusChangedEvent -= AntivirusEventHandler.OnStatusChangedEvent;
         }
     }
 }

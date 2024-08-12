@@ -1,16 +1,16 @@
-﻿using static AvMock.AntivirusService;
+﻿using static AvMock.Services.AntivirusService;
 
 namespace AvMock.Interfaces
 {
     public interface IAntivirusService
     {
-        event AntivirusOnDemandStatusChangeHandler AntivirusOnDemandStatusChangeEvent;
-        event ThreatDetectedHandler ThreatDetectedEvent;
+        event ThreatsDetectedEventHandler? ThreatsDetectedEvent;
+        event StatusChangedEventHandler? StatusChangedEvent;
 
         void StartOnDemandScan();
         void StopOnDemandScan(CancellationToken cancellationToken);
 
-        void ActivateRealTimeScan();
-        void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option);
+        //void ActivateRealTimeScan();
+        //void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option);
     }
 }

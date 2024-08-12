@@ -1,4 +1,6 @@
-﻿namespace AvMock.Interfaces
+﻿using AvMock.Enums;
+
+namespace AvMock.Interfaces
 {
     public interface IAntivirus
     {

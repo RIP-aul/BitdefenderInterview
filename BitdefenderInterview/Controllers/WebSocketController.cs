@@ -1,45 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
-using System.Text;
+﻿using AvMock.Interfaces;
+using BitdefenderInterview.Controllers.Commons;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BitdefenderInterview.Controllers
 {
     [ApiController]
-    public class WebSocketController : ControllerBase
+    public class WebSocketController : BaseController
     {
-        [HttpGet("connect")]
-        public async Task<IActionResult> Connect()
-        {
-            if (HttpContext.WebSockets.IsWebSocketRequest)
-            {
-                var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                await HandleWebSocketCommunication(webSocket);
-                return new EmptyResult();
-            }
-            else
-            {
-                return BadRequest("WebSocket request expected.");
-            }
-        }
+        public WebSocketController(IAntivirusEventHandler antivirusEventHandler, IAntivirusService antivirusService)
+            : base(antivirusEventHandler, antivirusService) { }
 
-        private static async Task HandleWebSocketCommunication(WebSocket webSocket)
-        {
-            var buffer = new byte[1024 * 4];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            while (!result.CloseStatus.HasValue)
-            {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Console.WriteLine($"Received: {message}");
-
-                var responseMessage = $"Server received: {message}";
-                var responseBuffer = Encoding.UTF8.GetBytes(responseMessage);
-                await webSocket.SendAsync(new ArraySegment<byte>(responseBuffer), result.MessageType, result.EndOfMessage, CancellationToken.None);
-
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-        }
+        [HttpGet("scan-events")]
+        public IActionResult GetScanEvents()
+            => AntivirusEventHandler.Events.Any()
+                ? Ok(AntivirusEventHandler.Events)
+                : NotFound("No Events found!");
     }
 }

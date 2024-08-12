@@ -4,23 +4,23 @@ namespace BitdefenderInterview.Controllers.Commons
 {
     public interface IAntivirusEventHandler
     {
-        IList<EventArgs> Events { get; set; }
-        void OnStatusChangedEvent(object sender, StatusEventArgs args);
-        void OnThreatDetectedEvent(object sender, ThreatDetectedEventArgs args);
+        List<EventArgs> Events { get; set; }
+
+        void OnStatusChangedEvent(object sender, StatusEventArgsBase args);
+        void OnThreatsDetectedEvent(object sender, IEnumerable<ThreatDetectedEventArgs> args);
     }
 
     public class AntivirusEventHandler : IAntivirusEventHandler
     {
-        public IList<EventArgs> Events { get; set; } = new List<EventArgs>();
+        public List<EventArgs> Events { get; set; } = new List<EventArgs>();
 
-        public void OnStatusChangedEvent(object sender, StatusEventArgs args)
-        {
-            Events.Add(args);
-        }
+        public void OnStatusChangedEvent(object sender, StatusEventArgsBase args)
+            => Events.Add(args);
 
-        public void OnThreatDetectedEvent(object sender, ThreatDetectedEventArgs args)
+        public void OnThreatsDetectedEvent(object sender, IEnumerable<ThreatDetectedEventArgs> args)
         {
-            Events.Add(args);
+            foreach (var x in args)
+                Events.Add(x);
         }
     }
 }

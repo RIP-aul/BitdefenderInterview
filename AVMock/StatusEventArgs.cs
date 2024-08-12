@@ -2,20 +2,43 @@
 
 namespace AvMock
 {
-    public class StatusEventArgs : EventArgs
+    public class StatusEventArgsBase : EventArgs
     {
         public DateTime? TimeOfEvent { get; set; }
-        public OnDemandScanStatuses NewStatus { get; set; }
-        public OnDemandScanStatuses OldStatus { get; set; }
 
-        public StatusEventArgs(DateTime timeOfEvent)
-            => TimeOfEvent = timeOfEvent;
-
-        public StatusEventArgs(DateTime timeOfEvent, OnDemandScanStatuses newStatus, OnDemandScanStatuses oldStatus)
+        public StatusEventArgsBase(DateTime? timeOfEvent)
         {
             TimeOfEvent = timeOfEvent;
-            NewStatus = newStatus;
+        }
+    }
+
+    public class OnDemandStatusEventArgs : StatusEventArgsBase
+    {
+        public OnDemandScanStatuses OldStatus { get; set; }
+        public OnDemandScanStatuses NewStatus { get; set; }
+
+        public OnDemandStatusEventArgs(
+            DateTime? timeOfEvent,
+            OnDemandScanStatuses oldStatus,
+            OnDemandScanStatuses newStatus) : base(timeOfEvent)
+        {
             OldStatus = oldStatus;
+            NewStatus = newStatus;
+        }
+    }
+
+    public class RealTimeStatusEventArgs : StatusEventArgsBase
+    {
+        public RealTimeScanStatuses OldStatus { get; set; }
+        public RealTimeScanStatuses NewStatus { get; set; }
+
+        public RealTimeStatusEventArgs(
+            DateTime? timeOfEvent,
+            RealTimeScanStatuses oldStatus,
+            RealTimeScanStatuses newStatus) : base(timeOfEvent)
+        {
+            OldStatus = oldStatus;
+            NewStatus = newStatus;
         }
     }
 }

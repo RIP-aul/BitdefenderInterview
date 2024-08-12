@@ -1,5 +1,6 @@
 using AvMock;
 using AvMock.Interfaces;
+using AvMock.Services;
 using BitdefenderInterview.Controllers.Commons;
 using Newtonsoft.Json;
 
@@ -11,7 +12,6 @@ namespace BitdefenderInterview
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
@@ -25,7 +25,6 @@ namespace BitdefenderInterview
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -42,6 +41,7 @@ namespace BitdefenderInterview
         {
             builder.Services.AddSingleton<IAntivirus, Antivirus>();
             builder.Services.AddSingleton<IAntivirusService, AntivirusService>();
+            builder.Services.AddSingleton<IOnDemandScanService, OnDemandScanService>();
             builder.Services.AddSingleton<IAntivirusEventHandler, AntivirusEventHandler>();
         }
     }
