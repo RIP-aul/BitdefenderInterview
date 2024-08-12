@@ -1,4 +1,5 @@
-﻿using static AvMock.Services.AntivirusService;
+﻿using AvMock.Enums;
+using static AvMock.Services.AntivirusService;
 
 namespace AvMock.Interfaces
 {
@@ -10,7 +11,8 @@ namespace AvMock.Interfaces
         void StartOnDemandScan();
         void StopOnDemandScan(CancellationToken cancellationToken);
 
-        //void ActivateRealTimeScan();
-        //void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option);
+        void ActivateRealTimeScan();
+        void DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions option);
+
     }
 }

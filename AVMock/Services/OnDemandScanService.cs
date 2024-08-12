@@ -2,46 +2,13 @@
 using AvMock.Exceptions;
 using AvMock.Exceptions.ExceptionMessages;
 using AvMock.Interfaces;
-using Bogus;
+using AvMock.Services.Commons;
+using static AvMock.Services.Commons.ServiceCommons;
 
 namespace AvMock.Services
 {
-    public class BaseScanService
-    {
-        public IAntivirus Antivirus { get; init; }
-        public Faker Faker { get; } = new Faker("en_US");
-
-        public delegate void ThreatsDetectedHandler(object source, IEnumerable<ThreatDetectedEventArgs> args);
-        public event ThreatsDetectedHandler? ThreatsDetectedEvent;
-
-        public delegate void StatusChangedHandler(object source, StatusEventArgsBase args);
-        public event StatusChangedHandler StatusChangedEvent;
-
-        public BaseScanService(IAntivirus antivirus)
-        {
-            Antivirus = antivirus;
-        }
-
-        public void OnThreatsDetectedEvent(IEnumerable<ThreatDetectedEventArgs> e)
-            => ThreatsDetectedEvent?.Invoke(this, e);
-
-        public void OnStatusChangedEvent(object source, StatusEventArgsBase e)
-            => StatusChangedEvent?.Invoke(this, e);
-    }
-
-    public interface IOnDemandScanService
-    {
-        event BaseScanService.ThreatsDetectedHandler ThreatsDetectedEvent;
-        event BaseScanService.StatusChangedHandler StatusChangedEvent;
-
-        void StartScan();
-        void StopScan(CancellationToken cancellationToken);
-    }
-
     public class OnDemandScanService : BaseScanService, IOnDemandScanService
     {
-        public OnDemandScanService(IAntivirus antivirus) : base(antivirus) { }
-
         event ThreatsDetectedHandler IOnDemandScanService.ThreatsDetectedEvent
         {
             add
@@ -82,6 +49,8 @@ namespace AvMock.Services
             set => ChangeStatus(value);
         }
 
+        public OnDemandScanService(IAntivirus antivirus) : base(antivirus) { }
+
         public void StartScan()
         {
             if (ScanStatus == OnDemandScanStatuses.Scanning)
@@ -103,8 +72,10 @@ namespace AvMock.Services
 
 
         private void ScanSystem(CancellationToken token)
-            => OnDemandScanningTask = GenerateFiles(token);
-
+        {
+            ScanStatus = OnDemandScanStatuses.Scanning;
+            OnDemandScanningTask = GenerateFiles(token);
+        }
 
         // threatProbability weight of 0.01f means 1.0%
         // threatProbability weight of 0.9f means 90.0%
@@ -134,19 +105,6 @@ namespace AvMock.Services
                 ScanStatus = OnDemandScanStatuses.ScanFinished;
         }
 
-
-        private void GenerateFile(float threatProbability, out bool isThreat, out AntivirusDetectionResult file)
-        {
-            var path = string.Concat(Faker.Random.Enum<Drives>(), ':', Faker.System.FilePath());
-
-            isThreat = IsThreat(threatProbability);
-            file = new AntivirusDetectionResult(
-                path,
-                isThreat
-                    ? Faker.Random.Enum(SecurityThreatNames.None, SecurityThreatNames.All) // remove None and All security threats
-                    : SecurityThreatNames.None);
-        }
-
         private void ChangeStatus(OnDemandScanStatuses newStatus)
         {
             OnStatusChangedEvent(this, new OnDemandStatusEventArgs(DateTime.Now, ScanStatus, newStatus));
@@ -168,16 +126,6 @@ namespace AvMock.Services
                 // clear old detections, they are being persisted later on
                 _detectedThreats = new List<AntivirusDetectionResult>();
             }
-        }
-
-        private bool IsThreat(float threatProbability)
-            => Faker.Random.Bool(threatProbability);
-
-        private enum Drives
-        {
-            C,
-            D,
-            E
         }
     }
 }

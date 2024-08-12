@@ -1,4 +1,5 @@
 using AvMock.Enums;
+using AvMock.Exceptions;
 using AvMock.Interfaces;
 using BitdefenderInterview.Controllers.Commons;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +20,16 @@ namespace BitdefenderInterview.Controllers
         [HttpPost("activate")]
         public IActionResult ActivateRealTimeScan()
         {
-            //try
-            //{
-            //    AntivirusService.ActivateRealTimeScan();
-            //}
-            //catch (RealTimeScanAlreadyEnabledException exception)
-            //{
-            //    return BadRequest(exception.Message);
-            //}
+            try
+            {
+                AntivirusService.ActivateRealTimeScan();
+            }
+            catch (RealTimeScanAlreadyEnabledException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
-            return Ok();
+            return Ok(ResponseMessages.RealTimeScanActivatedSuccessfully);
         }
 
         /// <summary>
@@ -39,16 +40,16 @@ namespace BitdefenderInterview.Controllers
         [Route("deactivate/{realTimeScanDisableOptions}")]
         public IActionResult DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions realTimeScanDisableOptions)
         {
-            //try
-            //{
-            //    AntivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
-            //}
-            //catch (RealTimeScanAlreadyDisabledException exception)
-            //{
-            //    return BadRequest(exception.Message);
-            //}
+            try
+            {
+                AntivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
+            }
+            catch (RealTimeScanAlreadyDisabledException exception)
+            {
+                return BadRequest(exception.Message);
+            }
 
-            return Ok();
+            return Ok(ResponseMessages.RealTimeScanDectivatedSuccessfully);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using AvMock.Interfaces;
+﻿using AvMock.Exceptions.ExceptionMessages;
+using AvMock.Interfaces;
 using BitdefenderInterview.Controllers.Commons;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,6 @@ namespace BitdefenderInterview.Controllers
         public IActionResult GetScanEvents()
             => AntivirusEventHandler.Events.Any()
                 ? Ok(AntivirusEventHandler.Events)
-                : NotFound("No Events found!");
+                : NotFound(ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.EventsNotFound]);
     }
 }

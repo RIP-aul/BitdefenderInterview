@@ -28,7 +28,7 @@ namespace BitdefenderInterview.Controllers
                 return BadRequest(exception.Message);
             }
 
-            return Ok();
+            return Ok(ResponseMessages.OnDemandScanStartedSuccessfully);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace BitdefenderInterview.Controllers
         {
             AntivirusService.StopOnDemandScan(new CancellationToken(true));
 
-            return Ok();
+            return Ok(ResponseMessages.OnDemandScanStoppedSuccessfully);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace BitdefenderInterview
             builder.Services.AddSingleton<IAntivirus, Antivirus>();
             builder.Services.AddSingleton<IAntivirusService, AntivirusService>();
             builder.Services.AddSingleton<IOnDemandScanService, OnDemandScanService>();
+            builder.Services.AddSingleton<IRealTimeScanService, RealTimeScanService>();
             builder.Services.AddSingleton<IAntivirusEventHandler, AntivirusEventHandler>();
         }
     }

@@ -7,5 +7,7 @@
 
         RealTimeScanAlreadyEnabled = 3,
         RealTimeScanAlreadyDisabled = 4,
+
+        EventsNotFound = 5,
     }
 }
