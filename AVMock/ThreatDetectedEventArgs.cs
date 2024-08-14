@@ -10,5 +10,8 @@
             TimeOfEvent = DateTime.Now;
             AntivirusDetectionResult = antivirusDetectionResult;
         }
+
+        public override string ToString()
+            => $"Time of event: {TimeOfEvent}\r\n{AntivirusDetectionResult}";
     }
 }

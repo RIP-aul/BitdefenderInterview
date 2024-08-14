@@ -12,7 +12,8 @@ namespace BitdefenderInterview.Controllers
         public EventRetrievalController(IAntivirusEventHandler antivirusEventHandler, IAntivirusService antivirusService)
             : base(antivirusEventHandler, antivirusService) { }
 
-        [HttpGet("event-log")]
+        [HttpGet]
+        [Route("event-log")]
         public IActionResult GetScanEventsLog()
             => AntivirusEventHandler.EventsLog.Any()
                 ? Ok(AntivirusEventHandler.EventsLog)

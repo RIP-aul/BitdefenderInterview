@@ -13,15 +13,6 @@ namespace BitdefenderInterview.Controllers.Commons
         {
             AntivirusEventHandler = antivirusEventHandler;
             AntivirusService = antivirusService;
-
-            AntivirusService.ThreatsDetectedEvent += AntivirusEventHandler.OnThreatsDetectedEvent;
-            AntivirusService.StatusChangedEvent += AntivirusEventHandler.OnStatusChangedEvent;
-        }
-
-        ~BaseController()
-        {
-            AntivirusService.ThreatsDetectedEvent -= AntivirusEventHandler.OnThreatsDetectedEvent;
-            AntivirusService.StatusChangedEvent -= AntivirusEventHandler.OnStatusChangedEvent;
         }
     }
 }

@@ -16,5 +16,8 @@ namespace AvMock
 
         public bool IsThreat()
             => !ThreatNameEnum.HasFlag(SecurityThreatNames.None);
+
+        public override string ToString()
+            => $"Detected Threat:\r\n\tFile path: {Path}\r\n\tThreat Name: {ThreatName}";
     }
 }

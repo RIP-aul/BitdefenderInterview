@@ -18,7 +18,8 @@ namespace BitdefenderInterview.Controllers
         /// Activates the real-time scan antivirus scan.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("activate")]
+        [HttpGet]
+        [Route("activate")]
         public IActionResult ActivateRealTimeScan()
         {
             try
@@ -37,7 +38,7 @@ namespace BitdefenderInterview.Controllers
         /// Deactivates the real-time scan antivirus scan.
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
+        [HttpGet]
         [Route("deactivate/{realTimeScanDisableOptions}")]
         public IActionResult DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions realTimeScanDisableOptions)
         {

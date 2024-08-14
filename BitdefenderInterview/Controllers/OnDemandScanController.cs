@@ -17,7 +17,8 @@ namespace BitdefenderInterview.Controllers
         /// Start the antivirus on-demand scan.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("start")]
+        [HttpGet]
+        [Route("start")]
         public IActionResult StartOnDemandScan()
         {
             try
@@ -36,7 +37,8 @@ namespace BitdefenderInterview.Controllers
         /// Stop the antivirus on-demand scan.
         /// </summary>
         /// <returns></returns>
-        [HttpPost("stop")]
+        [HttpGet]
+        [Route("stop")]
         public IActionResult StopOnDemandScan()
         {
             AntivirusService.StopOnDemandScan(new CancellationToken(true));

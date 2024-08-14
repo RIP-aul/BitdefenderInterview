@@ -1,4 +1,6 @@
 ﻿using AvMock.Enums;
+using AvMock.Exceptions;
+using AvMock.Exceptions.ExceptionMessages;
 using AvMock.Interfaces;
 using BitdefenderInterview.Commons.Interfaces;
 
@@ -40,7 +42,7 @@ namespace AntivirusSDK
             if (_antivirusEventHandler.EventsLog.Any())
                 return _antivirusEventHandler.EventsLog;
 
-            throw new NoLogsFoundException();
+            throw new NoLogsFoundException(ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.EventsNotFound]);
         }
     }
 }

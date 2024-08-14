@@ -25,6 +25,9 @@ namespace AvMock
             OldStatus = oldStatus;
             NewStatus = newStatus;
         }
+
+        public override string ToString()
+            => $"Time of event: {TimeOfEvent}\r\nOld status: {OldStatus}\r\nNew status: {NewStatus}";
     }
 
     public class RealTimeStatusEventArgs : StatusEventArgsBase
@@ -40,5 +43,8 @@ namespace AvMock
             OldStatus = oldStatus;
             NewStatus = newStatus;
         }
+
+        public override string ToString()
+            => $"Time of event: {TimeOfEvent}\r\nOld status: {OldStatus}\r\nNew status: {NewStatus}";
     }
 }

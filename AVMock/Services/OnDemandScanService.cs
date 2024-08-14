@@ -72,10 +72,7 @@ namespace AvMock.Services
 
 
         private void ScanSystem(CancellationToken token)
-        {
-            ScanStatus = OnDemandScanStatuses.Scanning;
-            OnDemandScanningTask = GenerateFiles(token);
-        }
+            => OnDemandScanningTask = GenerateFiles(token);
 
         // threatProbability weight of 0.01f means 1.0%
         // threatProbability weight of 0.9f means 90.0%

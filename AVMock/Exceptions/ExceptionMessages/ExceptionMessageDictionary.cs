@@ -8,7 +8,7 @@
             { ErrorCodes.OnDemandScanNotRunning, ExceptionMessages.OnDemandScanNotRunning },
             { ErrorCodes.RealTimeScanAlreadyEnabled, ExceptionMessages.RealTimeScanAlreadyEnabled },
             { ErrorCodes.RealTimeScanAlreadyDisabled, ExceptionMessages.RealTimeScanAlreadyDisabled },
-            { ErrorCodes.OnDemandScanNotRunning, ExceptionMessages.EventsNotFound },
+            { ErrorCodes.EventsNotFound, ExceptionMessages.EventsNotFound },
         };
     }
 }
