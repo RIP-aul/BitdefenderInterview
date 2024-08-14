@@ -18,21 +18,19 @@ namespace BitdefenderInterview.Controllers
         /// Activates the real-time scan antivirus scan.
         /// </summary>
         /// <returns>Returns a 200 response if the real-time scan activation is successful and a 400 otherwise.</returns>
-        [HttpGet]
+        [HttpPost]
         [Route("activate")]
         public IActionResult ActivateRealTimeScan()
         {
             try
             {
                 AntivirusService.ActivateRealTimeScan();
-                return Ok(ResponseMessages.RealTimeScanActivatedSuccessfully);
+                return Ok(new { Message = ResponseMessages.RealTimeScanActivatedSuccessfully });
             }
             catch (RealTimeScanAlreadyEnabledException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new { exception.Message });
             }
-
-
         }
 
         /// <summary>
@@ -40,18 +38,18 @@ namespace BitdefenderInterview.Controllers
         /// </summary>
         /// <param name="realTimeScanDisableOptions">An option for pausing the real-time scan, or stopping it completely.</param>
         /// <returns>Returns a 200 response if the real-time scan deactivation is successful and a 400 otherwise.</returns>
-        [HttpGet]
+        [HttpPost]
         [Route("deactivate/{realTimeScanDisableOptions}")]
         public IActionResult DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions realTimeScanDisableOptions)
         {
             try
             {
                 AntivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
-                return Ok(ResponseMessages.RealTimeScanDectivatedSuccessfully);
+                return Ok(new { Message = ResponseMessages.RealTimeScanDectivatedSuccessfully });
             }
             catch (RealTimeScanAlreadyDisabledException exception)
             {
-                return BadRequest(exception.Message);
+                return BadRequest(new { exception.Message });
             }
         }
     }

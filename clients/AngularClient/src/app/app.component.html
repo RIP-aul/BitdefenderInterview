@@ -8,8 +8,30 @@
   <button mat-raised-button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
   <button mat-raised-button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
   <button mat-raised-button (click)="getEventLog()">Get Event Log</button>
+  <select id="dropdown" style="width: 2.5%;" (change)="setPauseOption($event.target)">
+    <option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</option>
+  </select>
 </div>
 
-<select id="dropdown" style="width: 2.5%;" (change)="setPauseOption($event.target)">
-    <option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</option>
-</select>
+<div class="event-container" *ngFor="let event of this.eventLog" style="border: 1px; border-style: solid;">
+  <label class="event-headers">Date and time of event</label>
+  <div>{{ event.timeOfEvent }}</div>
+
+  <span *ngIf="event.oldStatus">
+    <label class="event-headers">Old scanning status</label>
+    <div>{{ event.oldStatus }}</div>
+  </span>
+
+  <span *ngIf="event.newStatus">
+    <label class="event-headers">New scanning status</label>
+    <div>{{ event.newStatus }}</div>
+  </span>
+
+  <span *ngIf="event.antivirusDetectionResult">
+    <label class="event-headers">File path</label>
+    <div>{{ event.antivirusDetectionResult.path }}</div>
+    
+    <label class="event-headers">Threat name</label>
+    <div>{{ event.antivirusDetectionResult.threatName }}</div>
+  </span>  
+</div>

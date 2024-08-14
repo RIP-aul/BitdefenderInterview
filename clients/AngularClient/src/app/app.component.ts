@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService } from './api.service';
+import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import * as _ from 'lodash'
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AppComponent {
   public title = 'Angular Client';
-
+  public eventLog: Array<EventLog> = [];
   public selectedOption = 0;
 
   public pauseOptions = [
@@ -32,15 +33,9 @@ export class AppComponent {
 
   public startOnDemandScan(): void {
     this.apiService.startOnDemandScan().subscribe({
-      next() {
-        console.log();
-      },
-      error(err) {
-        console.error('Something went wrong: ' + err);
-      },
-      complete() {
-        console.log('Done');
-      }
+      next: () => {}, 
+      error: (err: any) => console.error('Something went wrong: ' + err),
+      complete: () => console.log('Done')
     });
   }
 
@@ -49,7 +44,7 @@ export class AppComponent {
       next() {
         console.log();
       },
-      error(err) {
+      error(err: any)  {
         console.error('Something went wrong: ' + err);
       },
       complete() {
@@ -63,7 +58,7 @@ export class AppComponent {
       next() {
         console.log();
       },
-      error(err) {
+      error(err: any)  {
         console.error('Something went wrong: ' + err);
       },
       complete() {
@@ -77,7 +72,7 @@ export class AppComponent {
       next() {
         console.log();
       },
-      error(err) {
+      error(err: any)  {
         console.error('Something went wrong: ' + err);
       },
       complete() {
@@ -88,19 +83,25 @@ export class AppComponent {
 
   public getEventLog(): void {
     this.apiService.getEventLogs().subscribe({
-      next() {
-        console.log();
-      },
-      error(err) {
-        console.error('Something went wrong: ' + err);
-      },
-      complete() {
-        console.log('Done');
-      }
+      next: (value: Array<EventLog>) => this.eventLog = _.sortBy(value, 'timeOfEvent').reverse(),
+      error: (err: any)  => console.error('Something went wrong: ' + err),
+      complete: () => console.log('Done')
     });
   }
 
   public setPauseOption(option: any): void {
     this.selectedOption = option.value;
   }
+}
+
+export type EventLog = {
+  timeOfEvent: string;
+  newStatus?: string;
+  oldStatus?: string;
+  antivirusDetectionResult?: Threat;
+}
+
+export type Threat = {
+  path: string;
+  threatName: string;
 }
