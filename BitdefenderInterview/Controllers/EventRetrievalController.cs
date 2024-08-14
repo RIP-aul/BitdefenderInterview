@@ -12,6 +12,10 @@ namespace BitdefenderInterview.Controllers
         public EventRetrievalController(IAntivirusEventHandler antivirusEventHandler, IAntivirusService antivirusService)
             : base(antivirusEventHandler, antivirusService) { }
 
+        /// <summary>
+        /// Get the scan event log including status changes and threats detected.
+        /// </summary>
+        /// <returns>Returns a 200 response code containing a list of events if any exist or a 404 otherwise.</returns>
         [HttpGet]
         [Route("event-log")]
         public IActionResult GetScanEventsLog()

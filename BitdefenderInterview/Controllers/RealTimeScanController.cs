@@ -17,7 +17,7 @@ namespace BitdefenderInterview.Controllers
         /// <summary>
         /// Activates the real-time scan antivirus scan.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a 200 response if the real-time scan activation is successful and a 400 otherwise.</returns>
         [HttpGet]
         [Route("activate")]
         public IActionResult ActivateRealTimeScan()
@@ -25,19 +25,21 @@ namespace BitdefenderInterview.Controllers
             try
             {
                 AntivirusService.ActivateRealTimeScan();
+                return Ok(ResponseMessages.RealTimeScanActivatedSuccessfully);
             }
             catch (RealTimeScanAlreadyEnabledException exception)
             {
                 return BadRequest(exception.Message);
             }
 
-            return Ok(ResponseMessages.RealTimeScanActivatedSuccessfully);
+
         }
 
         /// <summary>
         /// Deactivates the real-time scan antivirus scan.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="realTimeScanDisableOptions">An option for pausing the real-time scan, or stopping it completely.</param>
+        /// <returns>Returns a 200 response if the real-time scan deactivation is successful and a 400 otherwise.</returns>
         [HttpGet]
         [Route("deactivate/{realTimeScanDisableOptions}")]
         public IActionResult DeactivateRealTimeScan(TemporaryRealTimeScanDisableOptions realTimeScanDisableOptions)
@@ -45,13 +47,12 @@ namespace BitdefenderInterview.Controllers
             try
             {
                 AntivirusService.DeactivateRealTimeScan(realTimeScanDisableOptions);
+                return Ok(ResponseMessages.RealTimeScanDectivatedSuccessfully);
             }
             catch (RealTimeScanAlreadyDisabledException exception)
             {
                 return BadRequest(exception.Message);
             }
-
-            return Ok(ResponseMessages.RealTimeScanDectivatedSuccessfully);
         }
     }
 }

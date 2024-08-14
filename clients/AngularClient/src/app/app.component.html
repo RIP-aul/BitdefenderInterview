@@ -10,6 +10,6 @@
   <button mat-raised-button (click)="getEventLog()">Get Event Log</button>
 </div>
 
-<select id="dropdown" style="width: 50%;" (change)="setPauseOption($event.target)">
+<select id="dropdown" style="width: 2.5%;" (change)="setPauseOption($event.target)">
     <option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</option>
 </select>

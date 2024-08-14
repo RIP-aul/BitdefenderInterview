@@ -16,7 +16,7 @@ namespace BitdefenderInterview.Controllers
         /// <summary>
         /// Start the antivirus on-demand scan.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a 200 response if the on-demand scan start is successful and a 400 otherwise.</returns> 
         [HttpGet]
         [Route("start")]
         public IActionResult StartOnDemandScan()
@@ -24,19 +24,18 @@ namespace BitdefenderInterview.Controllers
             try
             {
                 AntivirusService.StartOnDemandScan();
+                return Ok(new { message = ResponseMessages.OnDemandScanStartedSuccessfully });
             }
             catch (OnDemandScanAlreadyRunningException exception)
             {
                 return BadRequest(exception.Message);
             }
-
-            return Ok(new { message = ResponseMessages.OnDemandScanStartedSuccessfully });
         }
 
         /// <summary>
         /// Stop the antivirus on-demand scan.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Returns a 200 response if the on-demand scan stop is successful and a 400 otherwise.</returns> 
         [HttpGet]
         [Route("stop")]
         public IActionResult StopOnDemandScan()
@@ -44,7 +43,7 @@ namespace BitdefenderInterview.Controllers
             try
             {
                 AntivirusService.StopOnDemandScan(new CancellationToken(true));
-                return Ok(ResponseMessages.OnDemandScanStoppedSuccessfully)
+                return Ok(ResponseMessages.OnDemandScanStoppedSuccessfully);
             }
             catch (OnDemandScanNotRunningException exception)
             {
