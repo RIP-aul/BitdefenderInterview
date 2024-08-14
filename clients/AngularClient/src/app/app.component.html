@@ -1,37 +1,44 @@
-<div>
+<h1 class="title">
   {{title}}
+</h1>
+
+<div class="buttons-container">
+  <button class="buttons" mat-raised-button (click)="startOnDemandScan()">Start On-Demand Scan</button>
+  <button class="buttons" mat-raised-button (click)="stopOnDemandScan()">Stop On-Demand Scan</button>
+  <button class="buttons" mat-raised-button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
+  <button class="buttons" mat-raised-button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
+  <button class="buttons" mat-raised-button (click)="getEventLog()">Get Event Log</button>
+  <mat-form-field style="width: 10%;">
+    <mat-select style="border-radius: 1em;" placeholder="Pause Options" id="dropdown" (change)="setPauseOption($event.target)">
+      <mat-option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
-<div>
-  <button mat-raised-button (click)="startOnDemandScan()">Start On-Demand Scan</button>
-  <button mat-raised-button (click)="stopOnDemandScan()">Stop On-Demand Scan</button>
-  <button mat-raised-button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
-  <button mat-raised-button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
-  <button mat-raised-button (click)="getEventLog()">Get Event Log</button>
-  <select id="dropdown" style="width: 2.5%;" (change)="setPauseOption($event.target)">
-    <option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</option>
-  </select>
-</div>
+<span *ngIf="this.eventLog.length > 0">
+  <h2>Event Logs</h2>
 
-<div class="event-container" *ngFor="let event of this.eventLog" style="border: 1px; border-style: solid;">
-  <label class="event-headers">Date and time of event</label>
-  <div>{{ event.timeOfEvent }}</div>
+  <!-- TODO: Pagination -->
+  <div class="event-container" *ngFor="let event of this.eventLog">
+    <label class="event-headers">Date and time of event</label>
+    <div class="neutral-value">{{ event.timeOfEvent }}</div>
 
-  <span *ngIf="event.oldStatus">
-    <label class="event-headers">Old scanning status</label>
-    <div>{{ event.oldStatus }}</div>
-  </span>
+    <span *ngIf="event.oldStatus">
+      <label class="event-headers">Old scanning status</label>
+      <div class="neutral-value">{{ event.oldStatus }}</div>
+    </span>
 
-  <span *ngIf="event.newStatus">
-    <label class="event-headers">New scanning status</label>
-    <div>{{ event.newStatus }}</div>
-  </span>
+    <span *ngIf="event.newStatus">
+      <label class="event-headers">New scanning status</label>
+      <div class="neutral-value">{{ event.newStatus }}</div>
+    </span>
 
-  <span *ngIf="event.antivirusDetectionResult">
-    <label class="event-headers">File path</label>
-    <div>{{ event.antivirusDetectionResult.path }}</div>
-    
-    <label class="event-headers">Threat name</label>
-    <div>{{ event.antivirusDetectionResult.threatName }}</div>
-  </span>  
-</div>
+    <span *ngIf="event.antivirusDetectionResult">
+      <label class="event-headers">File path</label>
+      <div class="neutral-value">{{ event.antivirusDetectionResult.path }}</div>
+      
+      <label class="event-headers">Threat name</label>
+      <div class="threat-name">{{ event.antivirusDetectionResult.threatName }}</div>
+    </span>  
+  </div>
+</span>

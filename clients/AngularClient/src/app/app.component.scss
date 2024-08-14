@@ -1,9 +1,39 @@
-.event-container{
+.event-container {
     display: flex;
     margin-top: 0.5em;
     flex-direction: column;
+    padding-left: 1em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    border-radius: 1em;
+    border: 2px;
+    border-style: solid;
+    color: #00dddd;
+    background-color: black;
 }
 
-.event-headers{
+.event-headers {
     font-weight: bolder;
+}
+
+.buttons-container {
+    margin-top: 1vh;
+}
+
+.buttons {
+    margin-right: 1em;
+}
+
+.title {
+    font-weight: bold;
+    align-self: center;
+}
+
+.threat-name {
+    color: red;
+    font-weight: 500;
+}
+
+.neutral-value{
+    color: white;
 }

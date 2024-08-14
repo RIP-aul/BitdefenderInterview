@@ -3,12 +3,14 @@ import { RouterOutlet } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button'
+import { MatSelectModule } from '@angular/material/select'
 import * as _ from 'lodash'
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, FormsModule],
+  imports: [RouterOutlet, CommonModule, FormsModule, MatButtonModule, MatSelectModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -83,7 +85,14 @@ export class AppComponent {
 
   public getEventLog(): void {
     this.apiService.getEventLogs().subscribe({
-      next: (value: Array<EventLog>) => this.eventLog = _.sortBy(value, 'timeOfEvent').reverse(),
+      next: (value: Array<EventLogDto>) =>
+        this.eventLog = (_.sortBy(value, 'timeOfEvent').reverse()).map(item =>
+          ({
+            timeOfEvent: new Date(item.timeOfEvent),
+            newStatus: item.newStatus,
+            oldStatus: item.oldStatus,
+            antivirusDetectionResult: item.antivirusDetectionResult
+          })),
       error: (err: any)  => console.error('Something went wrong: ' + err),
       complete: () => console.log('Done')
     });
@@ -94,12 +103,19 @@ export class AppComponent {
   }
 }
 
-export type EventLog = {
+export type EventLogDto = {
   timeOfEvent: string;
   newStatus?: string;
   oldStatus?: string;
   antivirusDetectionResult?: Threat;
 }
+
+  export type EventLog = {
+    timeOfEvent: Date;
+    newStatus?: string;
+    oldStatus?: string;
+    antivirusDetectionResult?: Threat;
+  }
 
 export type Threat = {
   path: string;
