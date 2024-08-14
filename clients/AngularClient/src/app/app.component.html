@@ -1,13 +1,13 @@
 <div>
-  App Works
+  {{title}}
 </div>
 
 <div>
-  <button (click)="startOnDemandScan()">Start On-Demand Scan</button>
-  <button (click)="stopOnDemandScan()">Stop On-Demand Scan</button>
-  <button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
-  <button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
-  <button (click)="getEventLog()">Get Event Log</button>
+  <button mat-raised-button (click)="startOnDemandScan()">Start On-Demand Scan</button>
+  <button mat-raised-button (click)="stopOnDemandScan()">Stop On-Demand Scan</button>
+  <button mat-raised-button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
+  <button mat-raised-button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
+  <button mat-raised-button (click)="getEventLog()">Get Event Log</button>
 </div>
 
 <select id="dropdown" style="width: 50%;" (change)="setPauseOption($event.target)">

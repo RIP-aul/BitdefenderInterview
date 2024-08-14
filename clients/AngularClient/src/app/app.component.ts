@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'AngularClient';
+  public title = 'Angular Client';
 
   public selectedOption = 0;
 
@@ -27,7 +27,7 @@ export class AppComponent {
   ]
 
   constructor(
-    private apiService: ApiService) { 
+    private apiService: ApiService) {
     }
 
   public startOnDemandScan(): void {
@@ -45,34 +45,58 @@ export class AppComponent {
   }
 
   public stopOnDemandScan(): void {
-    this.apiService.stopOnDemandScan().subscribe(response => {
-      console.log('Scan started:', response);
-    }, error => {
-      console.error('Error starting scan:', error);
+    this.apiService.stopOnDemandScan().subscribe({
+      next() {
+        console.log();
+      },
+      error(err) {
+        console.error('Something went wrong: ' + err);
+      },
+      complete() {
+        console.log('Done');
+      }
     });
   }
 
   public activateRealTimeScan(): void {
-    this.apiService.activateRealTimeScan().subscribe(response => {
-      console.log('Scan started:', response);
-    }, error => {
-      console.error('Error starting scan:', error);
+    this.apiService.activateRealTimeScan().subscribe({
+      next() {
+        console.log();
+      },
+      error(err) {
+        console.error('Something went wrong: ' + err);
+      },
+      complete() {
+        console.log('Done');
+      }
     });
   }
 
   public deactivateRealTimeScan(): void {
-    this.apiService.deactivateRealTimeScan(this.selectedOption).subscribe(response => {
-      console.log('Scan started:', response);
-    }, error => {
-      console.error('Error starting scan:', error);
+    this.apiService.deactivateRealTimeScan(this.selectedOption).subscribe({
+      next() {
+        console.log();
+      },
+      error(err) {
+        console.error('Something went wrong: ' + err);
+      },
+      complete() {
+        console.log('Done');
+      }
     });
   }
 
   public getEventLog(): void {
-    this.apiService.getEventLogs().subscribe(response => {
-      console.log('Scan started:', response);
-    }, error => {
-      console.error('Error starting scan:', error);
+    this.apiService.getEventLogs().subscribe({
+      next() {
+        console.log();
+      },
+      error(err) {
+        console.error('Something went wrong: ' + err);
+      },
+      complete() {
+        console.log('Done');
+      }
     });
   }
 

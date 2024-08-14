@@ -30,7 +30,7 @@ namespace BitdefenderInterview.Controllers
                 return BadRequest(exception.Message);
             }
 
-            return Ok(ResponseMessages.OnDemandScanStartedSuccessfully);
+            return Ok(new { message = ResponseMessages.OnDemandScanStartedSuccessfully });
         }
 
         /// <summary>
@@ -41,9 +41,15 @@ namespace BitdefenderInterview.Controllers
         [Route("stop")]
         public IActionResult StopOnDemandScan()
         {
-            AntivirusService.StopOnDemandScan(new CancellationToken(true));
-
-            return Ok(ResponseMessages.OnDemandScanStoppedSuccessfully);
+            try
+            {
+                AntivirusService.StopOnDemandScan(new CancellationToken(true));
+                return Ok(ResponseMessages.OnDemandScanStoppedSuccessfully)
+            }
+            catch (OnDemandScanNotRunningException exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
     }
 }
