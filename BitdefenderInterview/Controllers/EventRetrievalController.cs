@@ -21,6 +21,6 @@ namespace BitdefenderInterview.Controllers
         public IActionResult GetScanEventsLog()
             => AntivirusEventHandler.EventsLog.Any()
                 ? Ok(AntivirusEventHandler.EventsLog)
-                : NotFound(ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.EventsNotFound]);
+                : NotFound(new { Message = ExceptionMessageDictionary.ErrorCodeDictionary[ErrorCodes.EventsNotFound] });
     }
 }

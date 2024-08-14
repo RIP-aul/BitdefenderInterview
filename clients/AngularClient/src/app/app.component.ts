@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button'
 import { MatSelectModule } from '@angular/material/select'
+import { MatSnackBar } from '@angular/material/snack-bar'
 import * as _ from 'lodash'
 
 @Component({
@@ -20,7 +21,6 @@ export class AppComponent {
   public selectedOption = 0;
 
   public pauseOptions = [
-    0,
     1,
     5,
     10,
@@ -30,24 +30,43 @@ export class AppComponent {
   ]
 
   constructor(
-    private apiService: ApiService) {
+    private apiService: ApiService,
+    private snackBar: MatSnackBar) {
     }
-
+ 
   public startOnDemandScan(): void {
     this.apiService.startOnDemandScan().subscribe({
-      next: () => {}, 
-      error: (err: any) => console.error('Something went wrong: ' + err),
+      next: (response: any) => {
+        this.snackBar.open(response.message, 'Close' , {
+          duration: 5000, // Automatically dismiss after 5 seconds
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
+      }, 
+      error: (err: any) => {
+        this.snackBar.open(err.error.message, 'Okay', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
+      },
       complete: () => console.log('Done')
     });
   }
 
   public stopOnDemandScan(): void {
     this.apiService.stopOnDemandScan().subscribe({
-      next() {
-        console.log();
+      next: (response: any) => {
+        this.snackBar.open(response.message, 'Close' , {
+          duration: 5000, // Automatically dismiss after 5 seconds
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
       },
-      error(err: any)  {
-        console.error('Something went wrong: ' + err);
+      error: (err: any) => {
+        this.snackBar.open(err.error.message, 'Okay', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
       },
       complete() {
         console.log('Done');
@@ -57,25 +76,37 @@ export class AppComponent {
 
   public activateRealTimeScan(): void {
     this.apiService.activateRealTimeScan().subscribe({
-      next() {
-        console.log();
+      next: (response: any) => {
+        this.snackBar.open(response.message, 'Close' , {
+          duration: 5000, // Automatically dismiss after 5 seconds
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
+      }, 
+      error: (err: any) => {
+        this.snackBar.open(err.error.message, 'Okay', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
       },
-      error(err: any)  {
-        console.error('Something went wrong: ' + err);
-      },
-      complete() {
-        console.log('Done');
-      }
+      complete: () => console.log('Done')
     });
   }
 
   public deactivateRealTimeScan(): void {
     this.apiService.deactivateRealTimeScan(this.selectedOption).subscribe({
-      next() {
-        console.log();
+      next: (response: any) => {
+        this.snackBar.open(response.message, 'Close' , {
+          duration: 5000, // Automatically dismiss after 5 seconds
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
       },
-      error(err: any)  {
-        console.error('Something went wrong: ' + err);
+      error: (err: any) => {
+        this.snackBar.open(err.error.message, 'Okay', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
       },
       complete() {
         console.log('Done');
@@ -88,12 +119,17 @@ export class AppComponent {
       next: (value: Array<EventLogDto>) =>
         this.eventLog = (_.sortBy(value, 'timeOfEvent').reverse()).map(item =>
           ({
-            timeOfEvent: new Date(item.timeOfEvent),
+            timeOfEvent: new Date(item.timeOfEvent), // make date more user friendly
             newStatus: item.newStatus,
             oldStatus: item.oldStatus,
             antivirusDetectionResult: item.antivirusDetectionResult
           })),
-      error: (err: any)  => console.error('Something went wrong: ' + err),
+      error: (err: any) => {
+        this.snackBar.open(err.error.message, 'Okay', {
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        })
+      },
       complete: () => console.log('Done')
     });
   }
@@ -110,12 +146,12 @@ export type EventLogDto = {
   antivirusDetectionResult?: Threat;
 }
 
-  export type EventLog = {
-    timeOfEvent: Date;
-    newStatus?: string;
-    oldStatus?: string;
-    antivirusDetectionResult?: Threat;
-  }
+export type EventLog = {
+  timeOfEvent: Date;
+  newStatus?: string;
+  oldStatus?: string;
+  antivirusDetectionResult?: Threat;
+}
 
 export type Threat = {
   path: string;

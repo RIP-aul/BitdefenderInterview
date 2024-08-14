@@ -8,8 +8,9 @@
   <button class="buttons" mat-raised-button (click)="activateRealTimeScan()">Activate Real-Time Scan</button>
   <button class="buttons" mat-raised-button (click)="deactivateRealTimeScan()">Deactivate Real-Time Scan</button>
   <button class="buttons" mat-raised-button (click)="getEventLog()">Get Event Log</button>
-  <mat-form-field style="width: 10%;">
-    <mat-select style="border-radius: 1em;" placeholder="Pause Options" id="dropdown" (change)="setPauseOption($event.target)">
+  <mat-form-field style="width: 15%;">
+    <mat-select style="border-radius: 1em;" placeholder="Pause Options (mins)" id="dropdown" (change)="setPauseOption($event.target)">
+      <mat-option [value]="0">(pause indefinitely)</mat-option>
       <mat-option [value]="option" *ngFor="let option of pauseOptions" >{{ option }}</mat-option>
     </mat-select>
   </mat-form-field>
